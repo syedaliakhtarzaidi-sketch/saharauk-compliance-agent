@@ -62,15 +62,13 @@
     <!-- UK Tab Content -->
     <div id="uk-tab" class="tab-content active">
         <div class="panel-grid">
-            <!-- Left: Batch Excel Upload -->
             <div class="card-box">
                 <h3>📁 Bulk Excel Analysis</h3>
                 <label for="uk-file">Upload Product List (.xlsx):</label>
                 <input type="file" id="uk-file" accept=".xlsx, .xls, .csv" onchange="handleExcelUpload('uk')">
-                <div style="font-size: 12px; color: #64748b; margin-top: 5px;">Processes entire catalog of 289+ items instantly.</div>
+                <div style="font-size: 12px; color: #64748b; margin-top: 5px;">Processes entire catalog instantly.</div>
             </div>
             
-            <!-- Right: Interactive Single Agent Query -->
             <div class="card-box">
                 <h3>💬 Interactive AI Agent Query</h3>
                 <label for="uk-single-prod">Product Name:</label>
@@ -83,7 +81,7 @@
         
         <div id="uk-terminal" class="agent-terminal">
             <p>[System] Initializing UK Customs Compliance Multi-Agent...</p>
-            <p>[Agent] Analyzing parameters and matching nomenclature with UK Global Online Tariff...</p>
+            <p>[Agent] Matching nomenclature with UK Global Online Tariff database...</p>
         </div>
         
         <div id="uk-single-result" class="result-box">
@@ -100,7 +98,6 @@
     <!-- Estonia Tab Content -->
     <div id="estonia-tab" class="tab-content">
         <div class="panel-grid">
-            <!-- Left: Batch Excel Upload -->
             <div class="card-box">
                 <h3>📁 Bulk EU TARIC Analysis</h3>
                 <label for="es-file">Upload Product List (.xlsx):</label>
@@ -108,7 +105,6 @@
                 <div style="font-size: 12px; color: #64748b; margin-top: 5px;">Processes entire catalog for EU/Estonia compliance.</div>
             </div>
 
-            <!-- Right: Interactive Single Agent Query -->
             <div class="card-box">
                 <h3>💬 Interactive AI Agent Query</h3>
                 <label for="es-single-prod">Product Name:</label>
@@ -154,17 +150,17 @@
         const name = productName.toLowerCase();
         
         if(name.includes('date') || name.includes('deglet') || name.includes('sayer') || name.includes('paste')) {
-            return { code: '0804.10.00.00', desc: 'Fresh or dried dates (Other)' };
+            return { code: '0804100000', desc: 'Fresh or dried dates (Other)' };
         } else if(name.includes('rice') || name.includes('basmati')) {
-            return { code: '1006.30.67.90', desc: 'Semi-milled or wholly milled rice, polished or glazed' };
+            return { code: '1006306790', desc: 'Semi-milled or wholly milled rice, polished or glazed' };
         } else if(name.includes('chicken') || name.includes('meat')) {
-            return { code: '0207.14.10.90', desc: 'Frozen cuts of fowls, boneless' };
+            return { code: '0207141090', desc: 'Frozen cuts of fowls, boneless' };
         } else if(name.includes('oil') || name.includes('cooking')) {
-            return { code: '1511.90.91.00', desc: 'Palm oil and its fractions, refined' };
+            return { code: '1511909100', desc: 'Palm oil and its fractions, refined' };
         } else if(name.includes('spice') || name.includes('masala') || name.includes('chili') || name.includes('saffron') || name.includes('pistachio')) {
-            return { code: '0910.99.99.00', desc: 'Other spices, nuts and seasoning mixtures' };
+            return { code: '0910999900', desc: 'Other spices, nuts and seasoning mixtures' };
         } else {
-            return { code: '2106.90.98.80', desc: 'Other food preparations not elsewhere specified or included' };
+            return { code: '2106909880', desc: 'Other food preparations not elsewhere specified or included' };
         }
     }
 
@@ -180,8 +176,9 @@
         }
 
         let aiResult = getAccurate10DigitCode(prodInput, region);
-        let link = region === 'uk' ? 'https://www.trade-tariff.service.gov.uk/find_commodity' : 'https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp';
-        let linkText = region === 'uk' ? 'Verify Live on HMRC Tariff ↗' : 'Verify Live on EU TARIC ↗';
+        let cleanCode = aiResult.code.replace(/\./g, '');
+        let link = region === 'uk' ? `https://www.trade-tariff.service.gov.uk/commodities/${cleanCode}` : 'https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp';
+        let linkText = region === 'uk' ? 'View Duty & VAT on HMRC Tariff ↗' : 'Verify Live on EU TARIC ↗';
 
         output.innerHTML = `
             <p><strong>Product:</strong> ${prodInput} | <strong>Origin:</strong> ${cooInput || 'General'}</p>
@@ -213,7 +210,7 @@
                 const worksheet = workbook.Sheets[firstSheetName];
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
                 
-                let html = `<table><tr><th>Product Name</th><th>Origin</th><th>10-Digit HS Code</th><th>Compliance Description</th><th>Official Verification Portal</th></tr>`;
+                let html = `<table><tr><th>Product Name</th><th>Origin</th><th>10-Digit HS Code</th><th>Compliance Description</th><th>Official Duty & VAT Portal</th></tr>`;
                 let count = 0;
 
                 for(let i = 0; i < jsonData.length; i++) {
@@ -230,8 +227,9 @@
                     
                     count++;
                     let aiResult = getAccurate10DigitCode(prod, region);
-                    let link = region === 'uk' ? 'https://www.trade-tariff.service.gov.uk/find_commodity' : 'https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp';
-                    let linkText = region === 'uk' ? 'HMRC Tariff ↗' : 'EU TARIC ↗';
+                    let cleanCode = aiResult.code.replace(/\./g, '');
+                    let link = region === 'uk' ? `https://www.trade-tariff.service.gov.uk/commodities/${cleanCode}` : 'https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp';
+                    let linkText = region === 'uk' ? 'Check Duty & VAT ↗' : 'EU TARIC ↗';
 
                     html += `<tr>
                         <td><strong>${prod}</strong></td>
