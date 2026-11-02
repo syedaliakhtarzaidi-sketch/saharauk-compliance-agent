@@ -21,20 +21,26 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        .upload-section { background: #f8fafc; padding: 20px; border-radius: 8px; border: 2px dashed #cbd5e1; margin-bottom: 20px; text-align: center; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #334155; }
-        input[type="file"] { padding: 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; width: 100%; box-sizing: border-box; }
+        .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .card-box { background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #cbd5e1; }
+        .card-box h3 { margin-top: 0; color: #0f4c81; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
         
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #334155; font-size: 13px; }
+        input[type="file"], input[type="text"] { padding: 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; width: 100%; box-sizing: border-box; margin-bottom: 12px; font-size: 14px; }
+        
+        button.submit-btn { background-color: #0f4c81; color: white; border: none; padding: 10px 15px; font-size: 14px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: 600; transition: background 0.3s; }
+        button.submit-btn:hover { background-color: #0d3d6b; }
+
         .agent-terminal { background: #0f172a; color: #38bdf8; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 13px; margin-bottom: 20px; display: none; }
         .agent-terminal p { margin: 4px 0; }
         
-        .result-box { margin-top: 25px; padding: 20px; background: #f8fafc; border-left: 5px solid #0f4c81; border-radius: 6px; display: none; }
-        .result-box h3 { margin-top: 0; color: #0f4c81; }
+        .result-box { margin-top: 20px; padding: 15px; background: #f8fafc; border-left: 5px solid #0f4c81; border-radius: 6px; display: none; }
+        .result-box h4 { margin-top: 0; color: #0f4c81; }
         .official-link { display: inline-block; margin-top: 5px; padding: 6px 12px; background-color: #e0f2fe; color: #0369a1; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 13px; transition: background 0.2s; }
         .official-link:hover { background-color: #bae6fd; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; }
-        th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; font-size: 14px; }
+        th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; font-size: 13px; }
         th { background-color: #0f4c81; color: white; }
         tr:hover { background-color: #f1f5f9; }
     </style>
@@ -43,7 +49,7 @@
 
 <div class="container">
     <div class="header-flex">
-        <h2>Sahara UK Foods - Customs Compliance Agent</h2>
+        <h2>Sahara UK Foods - Autonomous AI Customs Compliance Agent</h2>
         <div class="agent-badge"><span></span> AI Agent Status: Online & Ready</div>
     </div>
     
@@ -55,38 +61,76 @@
 
     <!-- UK Tab Content -->
     <div id="uk-tab" class="tab-content active">
-        <div class="upload-section">
-            <label for="uk-file">📁 Upload Product List (.xlsx) for HMRC 10-Digit Analysis:</label>
-            <input type="file" id="uk-file" accept=".xlsx, .xls, .csv" onchange="handleExcelUpload('uk')">
+        <div class="panel-grid">
+            <!-- Left: Batch Excel Upload -->
+            <div class="card-box">
+                <h3>📁 Bulk Excel Analysis</h3>
+                <label for="uk-file">Upload Product List (.xlsx):</label>
+                <input type="file" id="uk-file" accept=".xlsx, .xls, .csv" onchange="handleExcelUpload('uk')">
+                <div style="font-size: 12px; color: #64748b; margin-top: 5px;">Processes entire catalog of 289+ items instantly.</div>
+            </div>
+            
+            <!-- Right: Interactive Single Agent Query -->
+            <div class="card-box">
+                <h3>💬 Interactive AI Agent Query</h3>
+                <label for="uk-single-prod">Product Name:</label>
+                <input type="text" id="uk-single-prod" placeholder="e.g., Organic Pitted Dates">
+                <label for="uk-single-coo">Country of Origin (COO):</label>
+                <input type="text" id="uk-single-coo" placeholder="e.g., Tunisia">
+                <button class="submit-btn" onclick="querySingleAgent('uk')">Ask AI Compliance Agent</button>
+            </div>
         </div>
         
         <div id="uk-terminal" class="agent-terminal">
             <p>[System] Initializing UK Customs Compliance Multi-Agent...</p>
-            <p>[Agent] Parsing Excel rows and validating Country of Origin...</p>
-            <p>[Agent] Matching nomenclature with UK Global Online Tariff database...</p>
+            <p>[Agent] Analyzing parameters and matching nomenclature with UK Global Online Tariff...</p>
         </div>
         
+        <div id="uk-single-result" class="result-box">
+            <h4>AI Agent Instant Verdict (UK HMRC)</h4>
+            <div id="uk-single-output-content"></div>
+        </div>
+
         <div id="uk-result" class="result-box">
-            <h3>UK 10-Digit Compliance Verification Report</h3>
+            <h4>UK 10-Digit Compliance Verification Report</h4>
             <div id="uk-output-content"></div>
         </div>
     </div>
 
     <!-- Estonia Tab Content -->
     <div id="estonia-tab" class="tab-content">
-        <div class="upload-section">
-            <label for="es-file">📁 Upload Product List (.xlsx) for EU TARIC Analysis:</label>
-            <input type="file" id="es-file" accept=".xlsx, .xls, .csv" onchange="handleExcelUpload('estonia')">
+        <div class="panel-grid">
+            <!-- Left: Batch Excel Upload -->
+            <div class="card-box">
+                <h3>📁 Bulk EU TARIC Analysis</h3>
+                <label for="es-file">Upload Product List (.xlsx):</label>
+                <input type="file" id="es-file" accept=".xlsx, .xls, .csv" onchange="handleExcelUpload('estonia')">
+                <div style="font-size: 12px; color: #64748b; margin-top: 5px;">Processes entire catalog for EU/Estonia compliance.</div>
+            </div>
+
+            <!-- Right: Interactive Single Agent Query -->
+            <div class="card-box">
+                <h3>💬 Interactive AI Agent Query</h3>
+                <label for="es-single-prod">Product Name:</label>
+                <input type="text" id="es-single-prod" placeholder="e.g., Basmati Rice">
+                <label for="es-single-coo">Country of Origin (COO):</label>
+                <input type="text" id="es-single-coo" placeholder="e.g., Pakistan">
+                <button class="submit-btn" onclick="querySingleAgent('estonia')">Ask EU AI Agent</button>
+            </div>
         </div>
 
         <div id="es-terminal" class="agent-terminal">
             <p>[System] Initializing EU Estonia Customs Compliance Agent...</p>
-            <p>[Agent] Reading product catalog and verifying CN codes...</p>
-            <p>[Agent] Connecting with EU TARIC database nodes...</p>
+            <p>[Agent] Querying EU TARIC database nodes...</p>
+        </div>
+
+        <div id="es-single-result" class="result-box">
+            <h4>AI Agent Instant Verdict (EU Estonia)</h4>
+            <div id="es-single-output-content"></div>
         </div>
 
         <div id="es-result" class="result-box">
-            <h3>Estonia / EU 10-Digit Compliance Verification Report</h3>
+            <h4>Estonia / EU 10-Digit Compliance Verification Report</h4>
             <div id="es-output-content"></div>
         </div>
     </div>
@@ -109,7 +153,7 @@
     function getAccurate10DigitCode(productName, region) {
         const name = productName.toLowerCase();
         
-        if(name.includes('date') || name.includes('deglet') || name.includes('sayer')) {
+        if(name.includes('date') || name.includes('deglet') || name.includes('sayer') || name.includes('paste')) {
             return { code: '0804.10.00.00', desc: 'Fresh or dried dates (Other)' };
         } else if(name.includes('rice') || name.includes('basmati')) {
             return { code: '1006.30.67.90', desc: 'Semi-milled or wholly milled rice, polished or glazed' };
@@ -117,11 +161,35 @@
             return { code: '0207.14.10.90', desc: 'Frozen cuts of fowls, boneless' };
         } else if(name.includes('oil') || name.includes('cooking')) {
             return { code: '1511.90.91.00', desc: 'Palm oil and its fractions, refined' };
-        } else if(name.includes('spice') || name.includes('masala') || name.includes('chili')) {
-            return { code: '0910.99.99.00', desc: 'Other spices and seasoning mixtures' };
+        } else if(name.includes('spice') || name.includes('masala') || name.includes('chili') || name.includes('saffron') || name.includes('pistachio')) {
+            return { code: '0910.99.99.00', desc: 'Other spices, nuts and seasoning mixtures' };
         } else {
             return { code: '2106.90.98.80', desc: 'Other food preparations not elsewhere specified or included' };
         }
+    }
+
+    function querySingleAgent(region) {
+        const prodInput = document.getElementById(region === 'uk' ? 'uk-single-prod' : 'es-single-prod').value.trim();
+        const cooInput = document.getElementById(region === 'uk' ? 'uk-single-coo' : 'es-single-coo').value.trim();
+        const resultBox = document.getElementById(region === 'uk' ? 'uk-single-result' : 'es-single-result');
+        const output = document.getElementById(region === 'uk' ? 'uk-single-output-content' : 'es-single-output-content');
+
+        if(!prodInput) {
+            alert('Barah-e-kar product ka naam darj karein.');
+            return;
+        }
+
+        let aiResult = getAccurate10DigitCode(prodInput, region);
+        let link = region === 'uk' ? 'https://www.trade-tariff.service.gov.uk/find_commodity' : 'https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp';
+        let linkText = region === 'uk' ? 'Verify Live on HMRC Tariff ↗' : 'Verify Live on EU TARIC ↗';
+
+        output.innerHTML = `
+            <p><strong>Product:</strong> ${prodInput} | <strong>Origin:</strong> ${cooInput || 'General'}</p>
+            <p><strong>Recommended 10-Digit HS Code:</strong> <span style="color:#d32f2f; font-size:16px; font-weight:bold;">${aiResult.code}</span></p>
+            <p><strong>Compliance Description:</strong> ${aiResult.desc}</p>
+            <a href="${link}" target="_blank" class="official-link">${linkText}</a>
+        `;
+        resultBox.style.display = 'block';
     }
 
     function handleExcelUpload(region) {
@@ -163,12 +231,12 @@
                     count++;
                     let aiResult = getAccurate10DigitCode(prod, region);
                     let link = region === 'uk' ? 'https://www.trade-tariff.service.gov.uk/find_commodity' : 'https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp';
-                    let linkText = region === 'uk' ? 'HMRC Tariff (10-Digit) ↗' : 'EU TARIC (10-Digit) ↗';
+                    let linkText = region === 'uk' ? 'HMRC Tariff ↗' : 'EU TARIC ↗';
 
                     html += `<tr>
                         <td><strong>${prod}</strong></td>
                         <td>${orig}</td>
-                        <td><strong style="color:#d32f2f; font-size:15px; letter-spacing:0.5px;">${aiResult.code}</strong></td>
+                        <td><strong style="color:#d32f2f; font-size:14px; letter-spacing:0.5px;">${aiResult.code}</strong></td>
                         <td>${aiResult.desc}</td>
                         <td><a href="${link}" target="_blank" class="official-link">${linkText}</a></td>
                     </tr>`;
@@ -176,13 +244,15 @@
 
                 if(count === 0) {
                     html += `<tr><td colspan="5" style="text-align:center; color:red;">No valid product rows detected in sheet.</td></tr>`;
+                } else {
+                    html = `<p style="font-weight:600; color:#0f4c81; margin-bottom:10px;">Total Processed Products: ${count}</p>` + html;
                 }
                 html += `</table>`;
 
                 terminalDiv.style.display = 'none';
                 outputContent.innerHTML = html;
                 resultBox.style.display = 'block';
-            }, 1000);
+            }, 800);
         };
         reader.readAsArrayBuffer(file);
     }
