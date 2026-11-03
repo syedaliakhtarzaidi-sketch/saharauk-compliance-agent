@@ -62,10 +62,10 @@
         <div class="card-box">
             <h3>💬 Interactive AI Agent Query (UK HMRC)</h3>
             <label for="uk-single-prod">Product Name:</label>
-            <input type="text" id="uk-single-prod" placeholder="e.g., Date Paste, Basmati Rice, Apricot, Chickpeas">
+            <input type="text" id="uk-single-prod" placeholder="e.g., Date Paste, Basmati Rice, Apricot">
             
             <label for="uk-single-coo">Country of Origin (COO):</label>
-            <input type="text" id="uk-single-coo" placeholder="e.g., UAE, Pakistan, Turkey">
+            <input type="text" id="uk-single-coo" placeholder="e.g., UAE, Pakistan, Tunisia">
             
             <button class="submit-btn" onclick="querySingleAgent('uk')">Ask AI Compliance Agent</button>
         </div>
@@ -146,6 +146,7 @@
 
 <script>
     const masterCatalog = [
+        { name: "date paste", code: "0804.10.00.91", duty: "6.0%", desc: "Fresh or dried date paste without added sugar" },
         { name: "agave syrup", code: "1702.90.95.90", duty: "0.0%", desc: "Other sugars, including invert sugar and agave syrup" },
         { name: "apple juice", code: "2009.79.98.00", duty: "12.0%", desc: "Apple juice, unfermented" },
         { name: "apricot", code: "0813.10.00.00", duty: "2.0%", desc: "Dried apricots" },
@@ -170,7 +171,6 @@
         { name: "chopped hazelnut", code: "0802.22.00.00", duty: "0.0%", desc: "Hazelnuts, shelled" },
         { name: "coconut flour", code: "1106.30.90.90", duty: "0.0%", desc: "Flour and meal of products of Chapter 8" },
         { name: "corn", code: "1005.90.00.00", duty: "0.0%", desc: "Maize (corn)" },
-        { name: "date paste", code: "0804.10.00.91", duty: "6.0%", desc: "Fresh or dried date paste without added sugar" },
         { name: "date powder", code: "1106.30.90.90", duty: "0.0%", desc: "Flour, meal and powder of dates" },
         { name: "date spread", code: "2007.99.39.90", duty: "12.0%", desc: "Fruit paste and spreads" },
         { name: "date syrup", code: "1702.90.95.90", duty: "16.0%", desc: "Other sugars & sugar syrups including Date Syrup / Dibs" },
@@ -224,6 +224,10 @@
 
     function getAccurate10DigitCode(productName) {
         const query = productName.toLowerCase().trim();
+        // Exact priority match for date paste
+        if (query === "date paste") {
+            return { name: "date paste", code: "0804.10.00.91", duty: "6.0%", desc: "Fresh or dried date paste without added sugar" };
+        }
         let matched = masterCatalog.find(item => query.includes(item.name) || item.name.includes(query));
         if (matched) return matched;
         return { code: '2106.90.98.80', duty: 'Variable', desc: 'Other food preparations not elsewhere specified' };
