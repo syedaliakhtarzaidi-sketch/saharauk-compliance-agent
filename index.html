@@ -62,10 +62,10 @@
         <div class="card-box">
             <h3>💬 Interactive AI Agent Query (UK HMRC)</h3>
             <label for="uk-single-prod">Product Name:</label>
-            <input type="text" id="uk-single-prod" placeholder="e.g., Date Paste, Organic Pitted Dates, Basmati Rice">
+            <input type="text" id="uk-single-prod" placeholder="e.g., Date Paste, Basmati Rice, Apricot, Chickpeas">
             
             <label for="uk-single-coo">Country of Origin (COO):</label>
-            <input type="text" id="uk-single-coo" placeholder="e.g., UAE, Tunisia, Pakistan">
+            <input type="text" id="uk-single-coo" placeholder="e.g., UAE, Pakistan, Turkey">
             
             <button class="submit-btn" onclick="querySingleAgent('uk')">Ask AI Compliance Agent</button>
         </div>
@@ -93,8 +93,8 @@
                 </div>
                 <div class="metric-card">
                     <div class="metric-title">Import VAT Rate</div>
-                    <div class="metric-value" style="color: #c084fc;">20.0% (Standard) / 0% (Food)</div>
-                    <div class="metric-sub">UK Food Zero-Rating applicable where qualified.</div>
+                    <div class="metric-value" style="color: #c084fc;">0.0% (Zero-Rated)</div>
+                    <div class="metric-sub">UK Food Zero-Rating applied.</div>
                 </div>
             </div>
         </div>
@@ -146,28 +146,67 @@
 
 <script>
     const masterCatalog = [
-        { name: "date paste", code: "2007.99.39.90", duty: "12.00%", desc: "Fruit paste obtained by cooking, whether or not containing added sugar" },
-        { name: "date paste (pure / raw)", code: "0804.10.00.91", duty: "6.00%", desc: "Fresh or dried date paste without added sugar" },
-        { name: "chopped dates", code: "0804.10.00.00", duty: "0.00%", desc: "Fresh or dried dates, chopped" },
-        { name: "pitted dates", code: "0804.10.00.00", duty: "0.00%", desc: "Fresh or dried dates, pitted" },
-        { name: "unpitted dates", code: "0804.10.00.00", duty: "0.00%", desc: "Fresh or dried dates, unpitted" },
-        { name: "dates", code: "0804.10.00.00", duty: "0.00%", desc: "Fresh or dried dates" },
-        { name: "date syrup", code: "1702.90.95.90", duty: "16.00%", desc: "Other sugars & sugar syrups including Date Syrup / Dibs" },
-        { name: "date powder", code: "1106.30.90.90", duty: "0.00%", desc: "Flour, meal and powder of products of Chapter 8" },
-        { name: "agave syrup", code: "1702.90.95.90", duty: "0.0%", desc: "Other sugars, including invert sugar and agave" },
-        { name: "apple juice", code: "2009.79.98.00", duty: "12.00%", desc: "Apple juice, unfermented" },
-        { name: "apricot", code: "0813.10.00.00", duty: "2.00%", desc: "Dried apricots" },
-        { name: "apricot paste", code: "2007.99.39.90", duty: "12.00%", desc: "Apricot paste / fruit spread" },
-        { name: "apricot kernels", code: "1212.99.95.00", duty: "0.00%", desc: "Fruit stones and kernels" },
-        { name: "banana chips", code: "0813.40.95.00", duty: "2.00%", desc: "Other dried fruit, banana" },
-        { name: "basmati rice", code: "1006.30.67.90", duty: "0.00%", desc: "Semi-milled or wholly milled rice, polished or glazed" },
-        { name: "chickpeas", code: "0713.20.00.00", duty: "0.00%", desc: "Dried leguminous vegetables, chickpeas" },
-        { name: "chickpea flour", code: "1106.10.00.00", duty: "0.00%", desc: "Flour, meal and powder of dried leguminous vegetables" },
-        { name: "cashew kernels", code: "0801.32.00.00", duty: "0.00%", desc: "Cashew nuts, shelled" },
-        { name: "pistachio", code: "0802.52.00.00", duty: "0.00%", desc: "Pistachios, shelled or unshelled" },
-        { name: "hazelnut", code: "0802.22.00.00", duty: "0.00%", desc: "Hazelnuts or filberts, shelled" },
-        { name: "walnuts", code: "0802.32.00.00", duty: "0.00%", desc: "Walnuts, shelled" },
-        { name: "red lentil", code: "0713.40.00.00", duty: "0.00%", desc: "Dried lentils" }
+        { name: "agave syrup", code: "1702.90.95.90", duty: "0.0%", desc: "Other sugars, including invert sugar and agave syrup" },
+        { name: "apple juice", code: "2009.79.98.00", duty: "12.0%", desc: "Apple juice, unfermented" },
+        { name: "apricot", code: "0813.10.00.00", duty: "2.0%", desc: "Dried apricots" },
+        { name: "apricot juice", code: "2009.89.99.90", duty: "12.0%", desc: "Other juice of single fruit" },
+        { name: "apricot kernels", code: "1212.99.95.00", duty: "0.0%", desc: "Fruit stones and kernels" },
+        { name: "apricot paste", code: "2007.99.39.90", duty: "12.0%", desc: "Jams, fruit jellies, marmalades, apricot puree or paste" },
+        { name: "banana chips", code: "0813.40.95.00", duty: "2.0%", desc: "Other dried fruit, banana" },
+        { name: "barberry", code: "0813.40.95.00", duty: "2.0%", desc: "Other dried fruit" },
+        { name: "black mulberry juice", code: "2009.89.99.90", duty: "12.0%", desc: "Fruit juices" },
+        { name: "blanched broken hazelnut kernel", code: "0802.22.00.00", duty: "0.0%", desc: "Hazelnuts, shelled" },
+        { name: "blanched hazelnut", code: "0802.22.00.00", duty: "0.0%", desc: "Hazelnuts, shelled" },
+        { name: "blueberry juice", code: "2009.89.99.90", duty: "12.0%", desc: "Blueberry juice" },
+        { name: "broken hazelnut kernel", code: "0802.22.00.00", duty: "0.0%", desc: "Hazelnuts, shelled" },
+        { name: "brown lentil", code: "0713.40.00.00", duty: "0.0%", desc: "Dried lentils, shelled" },
+        { name: "bulghur", code: "1904.30.00.00", duty: "0.0%", desc: "Bulghur wheat" },
+        { name: "cacao nibs", code: "1801.00.00.00", duty: "0.0%", desc: "Cocoa beans, whole or broken" },
+        { name: "cacao powder", code: "1805.00.00.00", duty: "8.0%", desc: "Cocoa powder, not containing added sugar" },
+        { name: "cashew kernels", code: "0801.32.00.00", duty: "0.0%", desc: "Cashew nuts, shelled" },
+        { name: "chickpea flour", code: "1106.10.00.00", duty: "0.0%", desc: "Flour of dried leguminous vegetables" },
+        { name: "chickpeas", code: "0713.20.00.00", duty: "0.0%", desc: "Dried chickpeas" },
+        { name: "chopped dates", code: "0804.10.00.00", duty: "0.0%", desc: "Fresh or dried dates, chopped" },
+        { name: "chopped hazelnut", code: "0802.22.00.00", duty: "0.0%", desc: "Hazelnuts, shelled" },
+        { name: "coconut flour", code: "1106.30.90.90", duty: "0.0%", desc: "Flour and meal of products of Chapter 8" },
+        { name: "corn", code: "1005.90.00.00", duty: "0.0%", desc: "Maize (corn)" },
+        { name: "date paste", code: "0804.10.00.91", duty: "6.0%", desc: "Fresh or dried date paste without added sugar" },
+        { name: "date powder", code: "1106.30.90.90", duty: "0.0%", desc: "Flour, meal and powder of dates" },
+        { name: "date spread", code: "2007.99.39.90", duty: "12.0%", desc: "Fruit paste and spreads" },
+        { name: "date syrup", code: "1702.90.95.90", duty: "16.0%", desc: "Other sugars & sugar syrups including Date Syrup / Dibs" },
+        { name: "dates", code: "0804.10.00.00", duty: "0.0%", desc: "Fresh or dried dates" },
+        { name: "desiccated coconut", code: "0801.11.00.00", duty: "0.0%", desc: "Coconut, desiccated" },
+        { name: "diced apricot", code: "0813.10.00.00", duty: "2.0%", desc: "Dried apricots, diced" },
+        { name: "diced figs", code: "0813.40.95.00", duty: "2.0%", desc: "Dried figs, diced" },
+        { name: "diced plums", code: "0813.20.00.00", duty: "6.0%", desc: "Dried prunes / plums" },
+        { name: "dried apricot", code: "0813.10.00.00", duty: "2.0%", desc: "Dried apricots" },
+        { name: "dried black grape", code: "0806.20.00.00", duty: "2.0%", desc: "Dried grapes (raisins)" },
+        { name: "dried fig", code: "0813.40.95.00", duty: "2.0%", desc: "Dried figs" },
+        { name: "dried mango", code: "0804.50.00.20", duty: "0.0%", desc: "Dried mangoes" },
+        { name: "dried mulberry", code: "0813.40.95.00", duty: "2.0%", desc: "Dried mulberries" },
+        { name: "dried pineapple", code: "0804.30.00.00", duty: "0.0%", desc: "Dried pineapples" },
+        { name: "dried plums", code: "0813.20.00.00", duty: "6.0%", desc: "Prunes, dried" },
+        { name: "flax seeds", code: "1204.00.90.00", duty: "0.0%", desc: "Linseed / flax seeds" },
+        { name: "green lentil", code: "0713.40.00.00", duty: "0.0%", desc: "Green lentils, dried" },
+        { name: "hazelnut", code: "0802.22.00.00", duty: "0.0%", desc: "Hazelnuts, shelled" },
+        { name: "hazelnut flour", code: "1106.30.90.90", duty: "0.0%", desc: "Hazelnut flour" },
+        { name: "hazelnut paste", code: "2007.99.97.90", duty: "12.0%", desc: "Hazelnut paste" },
+        { name: "liquorice", code: "1302.12.00.00", duty: "0.0%", desc: "Vegetable saps and extracts of liquorice" },
+        { name: "orange juice", code: "2009.19.98.00", duty: "12.0%", desc: "Orange juice" },
+        { name: "peach juice", code: "2009.89.99.90", duty: "12.0%", desc: "Peach juice" },
+        { name: "pine nuts", code: "0802.92.00.00", duty: "0.0%", desc: "Pine nut kernels" },
+        { name: "pistachio", code: "0802.52.00.00", duty: "0.0%", desc: "Pistachios, shelled" },
+        { name: "pitted dates", code: "0804.10.00.00", duty: "0.0%", desc: "Pitted dates" },
+        { name: "pomegranate juice", code: "2009.89.99.90", duty: "12.0%", desc: "Pomegranate juice" },
+        { name: "poppy seeds", code: "1207.91.90.00", duty: "0.0%", desc: "Poppy seeds" },
+        { name: "prune", code: "0813.20.00.00", duty: "6.0%", desc: "Prunes" },
+        { name: "raisin", code: "0806.20.00.00", duty: "2.0%", desc: "Raisins" },
+        { name: "red lentil", code: "0713.40.00.00", duty: "0.0%", desc: "Red lentils" },
+        { name: "rice flour", code: "1102.90.10.00", duty: "0.0%", desc: "Rice flour" },
+        { name: "sultana", code: "0806.20.00.00", duty: "2.0%", desc: "Sultanas" },
+        { name: "walnuts", code: "0802.32.00.00", duty: "0.0%", desc: "Walnuts, shelled" },
+        { name: "yellow lentil", code: "0713.40.00.00", duty: "0.0%", desc: "Yellow lentils" },
+        { name: "basmati rice", code: "1006.30.67.90", duty: "0.0%", desc: "Semi-milled or wholly milled basmati rice" }
     ];
 
     function switchTab(country) {
