@@ -269,24 +269,24 @@
         // HS Code Knowledge Base for precise tariff classification
         const hsDatabase = [
             // Chapter 08: Edible Fruit & Nuts
-            { keywords: ['pistachio', 'pista'], code: '0802.51.00.00', desc: 'Pistachios, fresh or dried, in shell (Edible fruit & nuts)', dutyUK: '1.6%', dutyEU: '1.6%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Bill of Lading'], controls: 'Aflatoxin testing may be triggered at Border Control Posts (BCP) for US/Iranian origin.' },
-            { keywords: ['shelled pistachio'], code: '0802.52.00.00', desc: 'Pistachios, fresh or dried, shelled', dutyUK: '1.6%', dutyEU: '1.6%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Bill of Lading'], controls: 'Subject to Port Health Authority (PHA) import sampling for mycotoxins.' },
-            { keywords: ['date', 'dates', 'chopped dates', 'khajoor'], code: '0804.10.00.00', desc: 'Dates, fresh or dried, whether or not pitted or chopped', dutyUK: '0.0%', dutyEU: '0.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'GSP / REX Origin Statement'], controls: '0% preferential duty eligible under UK DCTS / EU GSP preference schemes.' },
-            { keywords: ['almond', 'almonds', 'badam'], code: '0802.11.90.00', desc: 'Almonds, fresh or dried, in shell', dutyUK: '2.0%', dutyEU: '2.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Certificate of Origin'], controls: 'Check USDA / Pre-export inspection certificates for US shipments.' },
-            { keywords: ['shelled almond'], code: '0802.12.90.00', desc: 'Almonds, fresh or dried, shelled', dutyUK: '3.5%', dutyEU: '3.5%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Bill of Lading'], controls: 'Aflatoxin risk control checks at port.' },
-            { keywords: ['walnut', 'walnuts', 'akhrot'], code: '0802.21.00.00', desc: 'Walnuts, fresh or dried, in shell', dutyUK: '4.0%', dutyEU: '4.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate'], controls: 'Standard phytosanitary border clearance.' },
-            { keywords: ['cashew', 'cashews', 'kaju'], code: '0801.31.00.00', desc: 'Cashew nuts, fresh or dried, in shell', dutyUK: '0.0%', dutyEU: '0.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'B/L'], controls: '0% MFN Third Country Duty rate.' },
+            { keywords: ['pistachio', 'pista'], code: '0802510000', desc: 'Pistachios, fresh or dried, in shell (Edible fruit & nuts)', dutyUK: '1.6%', dutyEU: '1.6%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Bill of Lading'], controls: 'Aflatoxin testing may be triggered at Border Control Posts (BCP) for US/Iranian origin.' },
+            { keywords: ['shelled pistachio'], code: '0802520000', desc: 'Pistachios, fresh or dried, shelled', dutyUK: '1.6%', dutyEU: '1.6%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Bill of Lading'], controls: 'Subject to Port Health Authority (PHA) import sampling for mycotoxins.' },
+            { keywords: ['date', 'dates', 'chopped dates', 'khajoor'], code: '0804100000', desc: 'Dates, fresh or dried, whether or not pitted or chopped', dutyUK: '0.0%', dutyEU: '0.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'GSP / REX Origin Statement'], controls: '0% preferential duty eligible under UK DCTS / EU GSP preference schemes.' },
+            { keywords: ['almond', 'almonds', 'badam'], code: '0802119000', desc: 'Almonds, fresh or dried, in shell', dutyUK: '2.0%', dutyEU: '2.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Certificate of Origin'], controls: 'Check USDA / Pre-export inspection certificates for US shipments.' },
+            { keywords: ['shelled almond'], code: '0802129000', desc: 'Almonds, fresh or dried, shelled', dutyUK: '3.5%', dutyEU: '3.5%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Bill of Lading'], controls: 'Aflatoxin risk control checks at port.' },
+            { keywords: ['walnut', 'walnuts', 'akhrot'], code: '0802210000', desc: 'Walnuts, fresh or dried, in shell', dutyUK: '4.0%', dutyEU: '4.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate'], controls: 'Standard phytosanitary border clearance.' },
+            { keywords: ['cashew', 'cashews', 'kaju'], code: '0801310000', desc: 'Cashew nuts, fresh or dried, in shell', dutyUK: '0.0%', dutyEU: '0.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'B/L'], controls: '0% MFN Third Country Duty rate.' },
             
             // Chapter 09: Spices, Coffee, Tea
-            { keywords: ['spice', 'spices', 'seasoning'], code: '0910.99.99.00', desc: 'Spices, ginger, saffron, turmeric (curcuma), thyme, bay leaves, curry', dutyUK: '0.0%', dutyEU: '0.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate'], controls: 'Pesticide residue level checks applicable under Food Safety legislation.' },
-            { keywords: ['turmeric', 'haldi'], code: '0910.30.00.00', desc: 'Turmeric (curcuma), fresh or dried, ground or powdered', dutyUK: '0.0%', dutyEU: '0.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate'], controls: 'Zero customs duty applies globally.' },
-            { keywords: ['black pepper', 'pepper'], code: '0904.11.00.00', desc: 'Pepper of the genus Piper; dried or crushed or ground', dutyUK: '0.0%', dutyEU: '0.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate'], controls: 'Standard import declaration required.' },
+            { keywords: ['spice', 'spices', 'seasoning'], code: '0910999900', desc: 'Spices, ginger, saffron, turmeric (curcuma), thyme, bay leaves, curry', dutyUK: '0.0%', dutyEU: '0.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate'], controls: 'Pesticide residue level checks applicable under Food Safety legislation.' },
+            { keywords: ['turmeric', 'haldi'], code: '0910300000', desc: 'Turmeric (curcuma), fresh or dried, ground or powdered', dutyUK: '0.0%', dutyEU: '0.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate'], controls: 'Zero customs duty applies globally.' },
+            { keywords: ['black pepper', 'pepper'], code: '0904110000', desc: 'Pepper of the genus Piper; dried or crushed or ground', dutyUK: '0.0%', dutyEU: '0.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate'], controls: 'Standard import declaration required.' },
 
             // Textiles & Apparel
-            { keywords: ['t-shirt', 'shirt', 'garment', 'apparel', 'clothes'], code: '6109.10.00.10', desc: 'T-shirts, singlets and other vests, knitted or crocheted, of cotton', dutyUK: '12.0%', dutyEU: '12.0%', vatUK: '20.0%', vatEU: '22.0%', docs: ['Commercial Invoice', 'Packing List', 'REX / GSP Certificate of Origin'], controls: '0% duty available under GSP / DCTS / Preferential Trade Agreements.' },
+            { keywords: ['t-shirt', 'shirt', 'garment', 'apparel', 'clothes'], code: '6109100010', desc: 'T-shirts, singlets and other vests, knitted or crocheted, of cotton', dutyUK: '12.0%', dutyEU: '12.0%', vatUK: '20.0%', vatEU: '22.0%', docs: ['Commercial Invoice', 'Packing List', 'REX / GSP Certificate of Origin'], controls: '0% duty available under GSP / DCTS / Preferential Trade Agreements.' },
             
             // Manufactured & Packaging
-            { keywords: ['plastic', 'box', 'packaging', 'container'], code: '3923.10.90.00', desc: 'Boxes, cases, crates and similar articles of plastics for packaging', dutyUK: '6.5%', dutyEU: '6.5%', vatUK: '20.0%', vatEU: '22.0%', docs: ['Commercial Invoice', 'Customs Declaration'], controls: 'UK Plastic Packaging Tax (PPT) may apply if containing <30% recycled plastic.' }
+            { keywords: ['plastic', 'box', 'packaging', 'container'], code: '3923109000', desc: 'Boxes, cases, crates and similar articles of plastics for packaging', dutyUK: '6.5%', dutyEU: '6.5%', vatUK: '20.0%', vatEU: '22.0%', docs: ['Commercial Invoice', 'Customs Declaration'], controls: 'UK Plastic Packaging Tax (PPT) may apply if containing <30% recycled plastic.' }
         ];
 
         // Switch between UK HMRC and Estonia EU TARIC
@@ -337,7 +337,7 @@
             }
             // Smart Fallback algorithm
             return {
-                code: '0813.40.95.00',
+                code: '0813409500',
                 desc: `Edible fruit and nut preparations / dry commodities (${product}) - Chapter 08`,
                 dutyUK: '3.2%',
                 dutyEU: '3.2%',
@@ -364,29 +364,30 @@
                 results.classList.remove('hidden');
 
                 const record = lookupHS(product);
+                // Ensure code is clean without dots
+                const cleanCode = record.code.replace(/\./g, '');
 
                 document.getElementById('res-product-title').innerText = `${capitalize(product)} (Origin: ${capitalize(coo)})`;
                 document.getElementById('res-timestamp').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
                 
                 document.getElementById('res-badge-entity').innerText = currentEntity === 'uk' ? 'UK HMRC' : 'Estonia / EU TARIC';
                 
-                document.getElementById('res-hscode').innerText = record.code;
+                document.getElementById('res-hscode').innerText = cleanCode;
                 document.getElementById('res-hsdesc').innerText = record.desc;
 
-                const rawCode = record.code.replace(/\./g, '');
                 const liveBtn = document.getElementById('res-live-taric-btn');
                 const liveTxt = document.getElementById('res-live-btn-txt');
 
                 if (currentEntity === 'uk') {
-                    liveBtn.href = `https://www.trade-tariff.service.gov.uk/commodities/${rawCode}`;
-                    liveTxt.innerText = `Verify Live on UK HMRC (${record.code})`;
+                    liveBtn.href = `https://www.trade-tariff.service.gov.uk/commodities/${cleanCode}`;
+                    liveTxt.innerText = `Verify Live on UK HMRC (${cleanCode})`;
                     document.getElementById('res-duty').innerText = record.dutyUK;
                     document.getElementById('res-vat').innerText = record.vatUK;
                     document.getElementById('res-dutynote').innerText = `Standard UK Global Tariff rate for origin ${capitalize(coo)}.`;
                     document.getElementById('res-vatnote').innerText = 'UK zero-rating applies to human foodstuffs.';
                 } else {
-                    liveBtn.href = `https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp?Lang=en&Taric=${rawCode}`;
-                    liveTxt.innerText = `Verify Live on EU TARIC (${record.code})`;
+                    liveBtn.href = `https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp?Lang=en&Taric=${cleanCode}`;
+                    liveTxt.innerText = `Verify Live on EU TARIC (${cleanCode})`;
                     document.getElementById('res-duty').innerText = record.dutyEU;
                     document.getElementById('res-vat').innerText = record.vatEU;
                     document.getElementById('res-dutynote').innerText = `Common Customs Tariff (CCT) rate for EU member state entry.`;
@@ -401,35 +402,10 @@
                     <p><strong><i class="fa-solid fa-shield-halved"></i> Statutory Inspection:</strong> ${record.controls}</p>
                 `;
 
-                document.getElementById('res-tip').innerText = `Always ensure commercial documents display the exact 10-digit Commodity Code (${record.code}) to avoid clearance delays.`;
+                document.getElementById('res-tip').innerText = `Always ensure commercial documents display the exact 10-digit Commodity Code (${cleanCode}) to avoid clearance delays.`;
 
                 results.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             }, 450);
         }
-
-        function capitalize(str) {
-            return str.replace(/\b\w/g, l => l.toUpperCase());
-        }
-
-        function copySummary() {
-            const hs = document.getElementById('res-hscode').innerText;
-            const duty = document.getElementById('res-duty').innerText;
-            const vat = document.getElementById('res-vat').innerText;
-            const text = `AI Trade Query Brief:\nCommodity Code: ${hs}\nDuty Rate: ${duty}\nVAT: ${vat}`;
-
-            const dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = text;
-            dummy.select();
-            document.execCommand("copy");
-            document.body.removeChild(dummy);
-
-            const btnText = document.getElementById('copy-btn-txt');
-            btnText.innerText = 'Copied!';
-            setTimeout(() => { btnText.innerText = 'Copy Brief'; }, 2000);
-        }
-    </script>
-
-</body>
-</html>
+<!-- ... existing code -->
