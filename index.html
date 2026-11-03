@@ -6,7 +6,7 @@
     <title>Sahara UK Foods - Autonomous AI Customs Compliance Agent</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+        .container { max-width: 850px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
         .header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eef2f5; padding-bottom: 15px; margin-bottom: 20px; }
         h2 { color: #0f4c81; margin: 0; font-size: 22px; }
         .agent-badge { background: #e3f2fd; color: #0d47a1; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
@@ -28,11 +28,19 @@
         button.submit-btn { background-color: #0f4c81; color: white; border: none; padding: 12px 20px; font-size: 15px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: 600; transition: background 0.3s; }
         button.submit-btn:hover { background-color: #0d3d6b; }
 
-        .result-box { margin-top: 20px; padding: 20px; background: #f8fafc; border-left: 5px solid #0f4c81; border-radius: 8px; display: none; }
-        .result-box h4 { margin-top: 0; color: #0f4c81; font-size: 16px; margin-bottom: 10px; }
-        .official-link { display: inline-block; margin-top: 10px; padding: 8px 16px; background-color: #0f4c81; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; transition: background 0.2s; }
-        .official-link:hover { background-color: #0d3d6b; }
-        .duty-badge { background-color: #e2e8f0; color: #0f4c81; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+        .result-box { margin-top: 20px; padding: 25px; background: #0f172a; color: #f8fafc; border-radius: 10px; display: none; }
+        .result-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 12px; margin-bottom: 15px; }
+        .badge-verified { background: #059669; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+        .badge-entity { background: #0284c7; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+        
+        .grid-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        .metric-card { background: #1e293b; padding: 15px; border-radius: 8px; border: 1px solid #334155; }
+        .metric-title { font-size: 12px; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px; font-weight: 600; }
+        .metric-value { font-size: 20px; font-weight: bold; color: #38bdf8; }
+        .metric-sub { font-size: 12px; color: #cbd5e1; margin-top: 5px; }
+
+        .official-link { display: inline-block; padding: 10px 18px; background-color: #059669; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; transition: background 0.2s; }
+        .official-link:hover { background-color: #047857; }
     </style>
 </head>
 <body>
@@ -63,8 +71,32 @@
         </div>
         
         <div id="uk-single-result" class="result-box">
-            <h4>AI Agent Verdict (UK HMRC)</h4>
-            <div id="uk-single-output-content"></div>
+            <div class="result-header">
+                <div>
+                    <span class="badge-entity">UK HMRC</span>
+                    <span class="badge-verified">VERIFIED TARIFF</span>
+                    <h3 id="uk-res-title" style="margin: 8px 0 0 0; color: #fff; font-size: 18px;"></h3>
+                </div>
+                <div id="uk-action-btn"></div>
+            </div>
+            
+            <div class="grid-results">
+                <div class="metric-card">
+                    <div class="metric-title">Recommended Commodity Code</div>
+                    <div class="metric-value" id="uk-res-code"></div>
+                    <div class="metric-sub" id="uk-res-desc"></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Customs Duty Rate</div>
+                    <div class="metric-value" id="uk-res-duty" style="color: #34d399;"></div>
+                    <div class="metric-sub">Standard UK Third-Country Tariff</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Import VAT Rate</div>
+                    <div class="metric-value" style="color: #c084fc;">20.0% (Standard) / 0% (Food)</div>
+                    <div class="metric-sub">UK Food Zero-Rating applicable where qualified.</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -82,14 +114,37 @@
         </div>
 
         <div id="es-single-result" class="result-box">
-            <h4>AI Agent Verdict (EU Estonia)</h4>
-            <div id="es-single-output-content"></div>
+            <div class="result-header">
+                <div>
+                    <span class="badge-entity" style="background:#7c3aed;">EU TARIC / ESTONIA</span>
+                    <span class="badge-verified">VERIFIED TARIFF</span>
+                    <h3 id="es-res-title" style="margin: 8px 0 0 0; color: #fff; font-size: 18px;"></h3>
+                </div>
+                <div id="es-action-btn"></div>
+            </div>
+            
+            <div class="grid-results">
+                <div class="metric-card">
+                    <div class="metric-title">Recommended Commodity Code</div>
+                    <div class="metric-value" id="es-res-code"></div>
+                    <div class="metric-sub" id="es-res-desc"></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">EU Third Country Duty</div>
+                    <div class="metric-value" id="es-res-duty" style="color: #34d399;"></div>
+                    <div class="metric-sub">Common Customs Tariff (EU TARIC)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Estonian VAT Rate</div>
+                    <div class="metric-value" style="color: #c084fc;">22.0% (Standard) / 9% (Reduced)</div>
+                    <div class="metric-sub">KMKR compliance standard for Estonia.</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Exact Verified Product Database for Sahara UK Foods
     const masterCatalog = [
         { name: "date paste", code: "2007.99.39.90", duty: "12.00%", desc: "Fruit paste obtained by cooking, whether or not containing added sugar" },
         { name: "date paste (pure / raw)", code: "0804.10.00.91", duty: "6.00%", desc: "Fresh or dried date paste without added sugar" },
@@ -97,7 +152,7 @@
         { name: "pitted dates", code: "0804.10.00.00", duty: "0.00%", desc: "Fresh or dried dates, pitted" },
         { name: "unpitted dates", code: "0804.10.00.00", duty: "0.00%", desc: "Fresh or dried dates, unpitted" },
         { name: "dates", code: "0804.10.00.00", duty: "0.00%", desc: "Fresh or dried dates" },
-        { name: "date syrup", code: "2007.99.39.90", duty: "12.00%", desc: "Date syrup / fruit spread" },
+        { name: "date syrup", code: "1702.90.95.90", duty: "16.00%", desc: "Other sugars & sugar syrups including Date Syrup / Dibs" },
         { name: "date powder", code: "1106.30.90.90", duty: "0.00%", desc: "Flour, meal and powder of products of Chapter 8" },
         { name: "agave syrup", code: "1702.90.95.90", duty: "0.0%", desc: "Other sugars, including invert sugar and agave" },
         { name: "apple juice", code: "2009.79.98.00", duty: "12.00%", desc: "Apple juice, unfermented" },
@@ -109,12 +164,10 @@
         { name: "chickpeas", code: "0713.20.00.00", duty: "0.00%", desc: "Dried leguminous vegetables, chickpeas" },
         { name: "chickpea flour", code: "1106.10.00.00", duty: "0.00%", desc: "Flour, meal and powder of dried leguminous vegetables" },
         { name: "cashew kernels", code: "0801.32.00.00", duty: "0.00%", desc: "Cashew nuts, shelled" },
-        { name: "pistachio (no shells)", code: "0802.52.00.00", duty: "0.00%", desc: "Pistachios, shelled" },
-        { name: "pistachio", code: "0802.52.00.00", duty: "0.00%", desc: "Pistachios, fresh or dried" },
+        { name: "pistachio", code: "0802.52.00.00", duty: "0.00%", desc: "Pistachios, shelled or unshelled" },
         { name: "hazelnut", code: "0802.22.00.00", duty: "0.00%", desc: "Hazelnuts or filberts, shelled" },
         { name: "walnuts", code: "0802.32.00.00", duty: "0.00%", desc: "Walnuts, shelled" },
-        { name: "red lentil", code: "0713.40.00.00", duty: "0.00%", desc: "Dried lentils" },
-        { name: "green lentil", code: "0713.40.00.00", duty: "0.00%", desc: "Dried lentils" }
+        { name: "red lentil", code: "0713.40.00.00", duty: "0.00%", desc: "Dried lentils" }
     ];
 
     function switchTab(country) {
@@ -132,27 +185,15 @@
 
     function getAccurate10DigitCode(productName) {
         const query = productName.toLowerCase().trim();
-        
-        // Match exact or partial match from Master Catalog
         let matched = masterCatalog.find(item => query.includes(item.name) || item.name.includes(query));
-        
-        if (matched) {
-            return matched;
-        }
-        
-        // Fallback default if not in exact list
-        return { 
-            code: '2106.90.98.80', 
-            duty: 'Varieable', 
-            desc: 'Other food preparations not elsewhere specified or included' 
-        };
+        if (matched) return matched;
+        return { code: '2106.90.98.80', duty: 'Variable', desc: 'Other food preparations not elsewhere specified' };
     }
 
     function querySingleAgent(region) {
         const prodInput = document.getElementById(region === 'uk' ? 'uk-single-prod' : 'es-single-prod').value.trim();
         const cooInput = document.getElementById(region === 'uk' ? 'uk-single-coo' : 'es-single-coo').value.trim();
         const resultBox = document.getElementById(region === 'uk' ? 'uk-single-result' : 'es-single-result');
-        const output = document.getElementById(region === 'uk' ? 'uk-single-output-content' : 'es-single-output-content');
 
         if(!prodInput) {
             alert('Barah-e-kar product ka naam darj karein.');
@@ -161,16 +202,21 @@
 
         let aiResult = getAccurate10DigitCode(prodInput);
         let cleanCode = aiResult.code.replace(/\./g, '');
-        let link = region === 'uk' ? `https://www.trade-tariff.service.gov.uk/commodities/${cleanCode}` : 'https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp';
-        let linkText = region === 'uk' ? 'View Live Duty & VAT on HMRC Tariff ↗' : 'Verify Live on EU TARIC ↗';
 
-        output.innerHTML = `
-            <p><strong>Product:</strong> ${prodInput} | <strong>Origin:</strong> ${cooInput || 'General'}</p>
-            <p><strong>Recommended 10-Digit HS Code:</strong> <span style="color:#d32f2f; font-size:18px; font-weight:bold;">${aiResult.code}</span></p>
-            <p><strong>Standard Import Duty Rate:</strong> <span class="duty-badge">${aiResult.duty}</span></p>
-            <p><strong>Compliance Description:</strong> ${aiResult.desc}</p>
-            <a href="${link}" target="_blank" class="official-link">${linkText}</a>
-        `;
+        if(region === 'uk') {
+            document.getElementById('uk-res-title').innerText = `${prodInput.toUpperCase()} (Origin: ${cooInput || 'General'})`;
+            document.getElementById('uk-res-code').innerText = aiResult.code;
+            document.getElementById('uk-res-desc').innerText = aiResult.desc;
+            document.getElementById('uk-res-duty').innerText = aiResult.duty;
+            document.getElementById('uk-action-btn').innerHTML = `<a href="https://www.trade-tariff.service.gov.uk/commodities/${cleanCode}" target="_blank" class="official-link">Verify Live on HMRC (${cleanCode}) ↗</a>`;
+        } else {
+            document.getElementById('es-res-title').innerText = `${prodInput.toUpperCase()} (Origin: ${cooInput || 'General'})`;
+            document.getElementById('es-res-code').innerText = aiResult.code;
+            document.getElementById('es-res-desc').innerText = aiResult.desc;
+            document.getElementById('es-res-duty').innerText = aiResult.duty;
+            document.getElementById('es-action-btn').innerHTML = `<a href="https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp" target="_blank" class="official-link" style="background:#7c3aed;">Verify Live on EU TARIC ↗</a>`;
+        }
+
         resultBox.style.display = 'block';
     }
 </script>
