@@ -193,9 +193,9 @@
                 <!-- HS Code -->
                 <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition">
                     <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Recommended Commodity Code</div>
-                    <div id="res-hscode" class="text-2xl font-extrabold text-blue-900 font-mono">0802.51.00.00</div>
+                    <div id="res-hscode" class="text-2xl font-extrabold text-blue-900 font-mono">0804100000</div>
                     <div id="res-hsdesc" class="text-xs text-slate-600 mt-2 font-medium leading-relaxed">
-                        Pistachios, fresh or dried, in shell (Edible Fruit & Nuts - Chapter 08).
+                        Dates, fresh or dried, whether or not pitted or chopped (Edible Fruit & Nuts - Chapter 08).
                     </div>
                 </div>
 
@@ -268,10 +268,15 @@
 
         // HS Code Knowledge Base for precise tariff classification
         const hsDatabase = [
+            // Processed Date Products & Syrups (Chapter 20 / Chapter 17)
+            { keywords: ['date syrup', 'date liquid', 'date honey', 'rubb', 'dibs'], code: '2007993990', desc: 'Date syrup / fruit puree & paste with added sugar/sweetening (Chapter 20)', dutyUK: '0.0%', dutyEU: '3.2%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Certificate of Origin', 'Health / Analysis Certificate'], controls: 'Subject to sugar content declaration and food hygiene standards compliance.' },
+            { keywords: ['date paste', 'pureed date', 'date puree'], code: '2008999990', desc: 'Fruit purees and pastes of dates, otherwise prepared or preserved', dutyUK: '0.0%', dutyEU: '3.2%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Bill of Lading'], controls: 'Standard food import safety inspection and labelling compliance.' },
+            { keywords: ['date sugar', 'liquid date sugar'], code: '1702909590', desc: 'Other sugars, including invert sugar and sugar syrup blends (Chapter 17)', dutyUK: '0.0%', dutyEU: '0.40 EUR / 100kg', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Laboratory Test / Sugar Brix Certificate'], controls: 'Sugar density analysis required for customs valuation.' },
+
             // Chapter 08: Edible Fruit & Nuts
             { keywords: ['pistachio', 'pista'], code: '0802510000', desc: 'Pistachios, fresh or dried, in shell (Edible fruit & nuts)', dutyUK: '1.6%', dutyEU: '1.6%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Bill of Lading'], controls: 'Aflatoxin testing may be triggered at Border Control Posts (BCP) for US/Iranian origin.' },
             { keywords: ['shelled pistachio'], code: '0802520000', desc: 'Pistachios, fresh or dried, shelled', dutyUK: '1.6%', dutyEU: '1.6%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Bill of Lading'], controls: 'Subject to Port Health Authority (PHA) import sampling for mycotoxins.' },
-            { keywords: ['date', 'dates', 'chopped dates', 'khajoor'], code: '0804100000', desc: 'Dates, fresh or dried, whether or not pitted or chopped', dutyUK: '0.0%', dutyEU: '0.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'GSP / REX Origin Statement'], controls: '0% preferential duty eligible under UK DCTS / EU GSP preference schemes.' },
+            { keywords: ['chopped dates', 'dried dates', 'fresh dates', 'raw dates', 'dates', 'date', 'khajoor'], code: '0804100000', desc: 'Dates, fresh or dried, whether or not pitted or chopped', dutyUK: '0.0%', dutyEU: '0.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'GSP / REX Origin Statement'], controls: '0% preferential duty eligible under UK DCTS / EU GSP preference schemes.' },
             { keywords: ['almond', 'almonds', 'badam'], code: '0802119000', desc: 'Almonds, fresh or dried, in shell', dutyUK: '2.0%', dutyEU: '2.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Certificate of Origin'], controls: 'Check USDA / Pre-export inspection certificates for US shipments.' },
             { keywords: ['shelled almond'], code: '0802129000', desc: 'Almonds, fresh or dried, shelled', dutyUK: '3.5%', dutyEU: '3.5%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate', 'Bill of Lading'], controls: 'Aflatoxin risk control checks at port.' },
             { keywords: ['walnut', 'walnuts', 'akhrot'], code: '0802210000', desc: 'Walnuts, fresh or dried, in shell', dutyUK: '4.0%', dutyEU: '4.0%', vatUK: '0.0% (Zero-Rated)', vatEU: '22.0%', docs: ['Commercial Invoice', 'Phytosanitary Certificate'], controls: 'Standard phytosanitary border clearance.' },
@@ -288,6 +293,11 @@
             // Manufactured & Packaging
             { keywords: ['plastic', 'box', 'packaging', 'container'], code: '3923109000', desc: 'Boxes, cases, crates and similar articles of plastics for packaging', dutyUK: '6.5%', dutyEU: '6.5%', vatUK: '20.0%', vatEU: '22.0%', docs: ['Commercial Invoice', 'Customs Declaration'], controls: 'UK Plastic Packaging Tax (PPT) may apply if containing <30% recycled plastic.' }
         ];
+
+        // Utility helper function to capitalize words
+        function capitalize(str) {
+            return str.replace(/\b\w/g, c => c.toUpperCase());
+        }
 
         // Switch between UK HMRC and Estonia EU TARIC
         function switchEntity(entity) {
@@ -364,8 +374,8 @@
                 results.classList.remove('hidden');
 
                 const record = lookupHS(product);
-                // Ensure code is clean without dots
-                const cleanCode = record.code.replace(/\./g, '');
+                // Ensure code is clean without dots everywhere
+                const cleanCode = record.code.replace(/\./g, '').trim();
 
                 document.getElementById('res-product-title').innerText = `${capitalize(product)} (Origin: ${capitalize(coo)})`;
                 document.getElementById('res-timestamp').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -408,4 +418,29 @@
 
             }, 450);
         }
-<!-- ... existing code -->
+
+        function copySummary() {
+            const prod = document.getElementById('res-product-title').innerText;
+            const code = document.getElementById('res-hscode').innerText;
+            const duty = document.getElementById('res-duty').innerText;
+            const vat = document.getElementById('res-vat').innerText;
+            const entity = currentEntity === 'uk' ? 'UK HMRC' : 'Estonia EMTA (EU TARIC)';
+            
+            const summaryText = `Customs Compliance Brief (${entity}):\nProduct: ${prod}\nCommodity Code: ${code}\nCustoms Duty: ${duty}\nImport VAT: ${vat}`;
+            
+            const tempInput = document.createElement('textarea');
+            tempInput.value = summaryText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            const btnTxt = document.getElementById('copy-btn-txt');
+            btnTxt.innerText = 'Copied!';
+            setTimeout(() => {
+                btnTxt.innerText = 'Copy Brief';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
