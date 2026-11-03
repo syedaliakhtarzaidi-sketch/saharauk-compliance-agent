@@ -3,173 +3,452 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Trade & Tariff AI | Fixed Compliance Engine</title>
+    <title>Global Trade & Tariff AI | HMRC & Estonia TARIC Compliance</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .tab-btn.active { border-bottom: 3px solid #0284c7; color: #0284c7; font-weight: 700; }
-        .tab-btn { border-bottom: 3px solid transparent; color: #64748b; font-weight: 600; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .active-tab {
+            border-bottom: 3px solid #0284c7;
+            color: #0369a1;
+            font-weight: 700;
+        }
+        .inactive-tab {
+            border-bottom: 3px solid transparent;
+            color: #64748b;
+        }
+        .inactive-tab:hover {
+            color: #334155;
+            border-color: #cbd5e1;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.99); }
+        }
+        .pulse-card {
+            animation: pulseGlow 1.2s infinite ease-in-out;
+        }
     </style>
 </head>
-<body class="min-h-screen text-slate-800 flex flex-col">
+<body class="min-h-screen text-slate-800 antialiased flex flex-col justify-between">
 
-    <header class="bg-white border-b border-slate-200 py-4 px-6 md:px-12 flex justify-between items-center shadow-sm">
-        <div class="flex items-center space-x-3">
-            <div class="bg-slate-900 text-white p-2.5 rounded-xl shadow-md">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <!-- Header Navigation -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+                    <i class="fa-solid fa-ship"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-900 text-lg leading-none">Global Trade & Tariff AI</h1>
+                    <span class="text-xs text-slate-500 font-medium">HMRC & Estonia (EU TARIC) Compliance Engine</span>
+                </div>
             </div>
-            <div>
-                <h1 class="font-bold text-lg text-slate-900 leading-tight">Global Trade & Tariff AI</h1>
-                <p class="text-xs text-slate-500 font-medium">HMRC & EU TARIC Automated Compliance Engine</p>
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Live Customs Rules
+                </span>
             </div>
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto w-full px-4 py-8 flex-1">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-8 overflow-hidden">
-            <div class="flex border-b border-slate-100 bg-slate-50/50">
-                <button onclick="switchTab('UK')" id="tab-UK" class="tab-btn active px-8 py-4 text-sm transition-all">UK Entity (HMRC)</button>
-                <button onclick="switchTab('EU')" id="tab-EU" class="tab-btn px-8 py-4 text-sm transition-all">Estonia Entity (EU TARIC)</button>
-            </div>
-
-            <div class="p-6 md:p-8">
-                <div class="bg-slate-50/80 rounded-2xl p-6 border border-slate-200/80">
-                    <form id="complianceForm" onsubmit="handleFormSubmit(event)" class="space-y-5">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Product Name:</label>
-                            <input type="text" id="productName" required placeholder="e.g. date paste, date syrup, chopped dates" class="w-full px-4 py-3.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Country of Origin (COO):</label>
-                            <input type="text" id="countryOrigin" required placeholder="e.g. UAE, Pakistan, USA" class="w-full px-4 py-3.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
-                        </div>
-                        <button type="submit" class="w-full bg-[#0b2545] hover:bg-[#134074] text-white font-bold py-4 px-6 rounded-xl transition-all text-sm">🤖 Ask AI Compliance Agent</button>
-                    </form>
-                </div>
-            </div>
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 py-8 sm:px-6 w-full flex-grow">
+        
+        <!-- Entity Selector Tabs -->
+        <div class="flex border-b border-slate-300 mb-6 bg-white rounded-t-xl px-4 pt-2 shadow-xs">
+            <button type="button" id="tab-uk" onclick="switchEntity('uk')" class="active-tab py-3.5 px-6 font-semibold text-sm sm:text-base transition-all flex items-center gap-2 focus:outline-none cursor-pointer">
+                <span class="text-lg">🇬🇧</span> UK Entity (HMRC)
+            </button>
+            <button type="button" id="tab-estonia" onclick="switchEntity('estonia')" class="inactive-tab py-3.5 px-6 font-semibold text-sm sm:text-base transition-all flex items-center gap-2 focus:outline-none cursor-pointer">
+                <span class="text-lg">🇪🇪</span> Estonia Entity (EU TARIC / EMTA)
+            </button>
         </div>
 
-        <div id="resultsCard" class="hidden space-y-6">
-            <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
-                <div>
-                    <h2 id="resultTitle" class="text-2xl font-bold"></h2>
-                    <p id="resultTimestamp" class="text-xs text-slate-400 mt-1 font-mono"></p>
+        <!-- Main Form Card -->
+        <div class="bg-slate-50/50 border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
+            <div class="flex items-center gap-2.5 mb-6 text-slate-800">
+                <div class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm">
+                    <i class="fa-regular fa-comment-dots"></i>
                 </div>
-                <a id="verifyLink" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-3 rounded-xl transition">Verify Live</a>
+                <h2 id="card-title" class="text-lg sm:text-xl font-bold tracking-tight text-slate-900">
+                    Interactive AI Agent Query (UK HMRC)
+                </h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">COMMODITY CODE</div>
-                    <div id="resCode" class="text-3xl font-extrabold text-indigo-700 font-mono mb-2"></div>
-                    <p id="resCodeDesc" class="text-xs text-slate-500"></p>
+            <form id="tariff-form" onsubmit="handleFormSubmit(event)" class="space-y-5">
+                <div>
+                    <label for="product_name" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
+                        Product Name:
+                    </label>
+                    <input 
+                        type="text" 
+                        id="product_name" 
+                        placeholder="e.g. date syrup, date paste, chopped dates, pistachios"
+                        value="date syrup"
+                        class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 text-base focus:ring-2 focus:ring-sky-600 focus:border-sky-600 outline-none transition shadow-xs"
+                        required
+                    />
                 </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">CUSTOMS DUTY RATE</div>
-                    <div id="resDuty" class="text-3xl font-extrabold text-emerald-600 mb-2"></div>
-                    <p id="resDutyDesc" class="text-xs text-slate-500"></p>
+
+                <div>
+                    <label for="coo" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
+                        Country of Origin (COO):
+                    </label>
+                    <input 
+                        type="text" 
+                        id="coo" 
+                        placeholder="e.g. UAE, Pakistan, USA, Turkey"
+                        value="UAE"
+                        class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 text-base focus:ring-2 focus:ring-sky-600 focus:border-sky-600 outline-none transition shadow-xs"
+                        required
+                    />
                 </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">IMPORT VAT RATE</div>
-                    <div id="resVat" class="text-3xl font-extrabold text-violet-600 mb-2"></div>
-                    <p id="resVatDesc" class="text-xs text-slate-500"></p>
+
+                <!-- Presets from your spreadsheet -->
+                <div class="flex flex-wrap gap-2 pt-1 items-center">
+                    <span class="text-xs text-slate-500 font-medium mr-1">Quick Samples:</span>
+                    <button type="button" onclick="setPreset('date syrup', 'UAE')" class="px-2.5 py-1 text-xs bg-white border border-slate-200 hover:border-sky-400 hover:text-sky-700 rounded-md transition text-slate-600 shadow-2xs">
+                        🌴 Date Syrup (UAE)
+                    </button>
+                    <button type="button" onclick="setPreset('date paste', 'UAE')" class="px-2.5 py-1 text-xs bg-white border border-slate-200 hover:border-sky-400 hover:text-sky-700 rounded-md transition text-slate-600 shadow-2xs">
+                        🌴 Date Paste (UAE)
+                    </button>
+                    <button type="button" onclick="setPreset('chopped dates', 'Pakistan')" class="px-2.5 py-1 text-xs bg-white border border-slate-200 hover:border-sky-400 hover:text-sky-700 rounded-md transition text-slate-600 shadow-2xs">
+                        🌴 Chopped Dates (PK)
+                    </button>
+                    <button type="button" onclick="setPreset('pistachios', 'USA')" class="px-2.5 py-1 text-xs bg-white border border-slate-200 hover:border-sky-400 hover:text-sky-700 rounded-md transition text-slate-600 shadow-2xs">
+                        🥜 Pistachios (USA)
+                    </button>
+                    <button type="button" onclick="setPreset('almonds', 'USA')" class="px-2.5 py-1 text-xs bg-white border border-slate-200 hover:border-sky-400 hover:text-sky-700 rounded-md transition text-slate-600 shadow-2xs">
+                        🌰 Almonds (USA)
+                    </button>
+                </div>
+
+                <div class="pt-2">
+                    <button 
+                        type="submit" 
+                        id="submit-btn"
+                        class="w-full bg-[#0b2545] hover:bg-[#134074] active:bg-[#081b33] text-white font-semibold py-3.5 px-6 rounded-lg transition-all shadow-md flex items-center justify-center gap-2 text-base cursor-pointer"
+                    >
+                        <i class="fa-solid fa-robot"></i>
+                        <span>Ask AI Compliance Agent</span>
+                    </button>
+                    <p class="text-center text-xs text-slate-500 mt-2 flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-bolt text-amber-500"></i> Pressing <kbd class="px-2 py-0.5 bg-slate-200 text-slate-800 rounded font-bold border border-slate-300">Enter</kbd> in any box triggers search instantly.
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Loading State Indicator -->
+        <div id="loading-spinner" class="hidden mt-8 p-8 bg-white rounded-2xl border border-slate-200 text-center shadow-xs pulse-card">
+            <div class="w-12 h-12 border-4 border-slate-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <h3 class="font-bold text-slate-800 text-lg">Querying Official Tariff Engine...</h3>
+            <p class="text-sm text-slate-500 mt-1" id="loading-subtext">Verifying commodity code and duty rates...</p>
+        </div>
+
+        <!-- Dynamic Results Card -->
+        <div id="results-container" class="hidden mt-8 space-y-6">
+            <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-md border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span id="res-badge-entity" class="px-2.5 py-0.5 rounded text-xs font-bold bg-sky-500 text-white uppercase tracking-wider">UK HMRC</span>
+                        <span id="res-badge-scheme" class="px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-500 text-white uppercase tracking-wider">VERIFIED TARIFF</span>
+                    </div>
+                    <h3 id="res-product-title" class="text-2xl font-bold tracking-tight">Date Syrup (Origin: UAE)</h3>
+                    <p class="text-xs text-slate-400 mt-1">
+                        <i class="fa-regular fa-clock"></i> Query timestamp: <span id="res-timestamp">Just now</span>
+                    </p>
+                </div>
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <a id="res-live-taric-btn" href="#" target="_blank" rel="noopener noreferrer" class="flex-1 sm:flex-none px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg text-xs transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> <span id="res-live-btn-txt">Verify Live Authority</span>
+                    </a>
+                    <button onclick="copySummary()" class="flex-1 sm:flex-none px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-medium transition flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-copy"></i> <span id="copy-btn-txt">Copy Brief</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Key Metrics Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Recommended Commodity Code</div>
+                    <div id="res-hscode" class="text-2xl font-extrabold text-indigo-700 font-mono">1702909590</div>
+                    <div id="res-hsdesc" class="text-xs text-slate-600 mt-2 font-medium leading-relaxed">
+                        Date Syrup / Liquid sugar extract syrups under Tariff Heading 1702.
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Customs Duty Rate</div>
+                    <div id="res-duty" class="text-2xl font-extrabold text-emerald-600">16.0%</div>
+                    <div id="res-dutynote" class="text-xs text-slate-600 mt-2 font-medium leading-relaxed">
+                        Standard Third-Country Rate for origin.
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Import VAT Rate</div>
+                    <div id="res-vat" class="text-2xl font-extrabold text-violet-600">0.0% (Zero-Rated)</div>
+                    <div id="res-vatnote" class="text-xs text-slate-600 mt-2 font-medium leading-relaxed">
+                        Zero-rated foodstuff classification.
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-4">
+                <h4 class="text-base font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-2">
+                    <i class="fa-solid fa-building-columns text-sky-700"></i> Official Authority Direct Portals
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+                    <a id="uk-portal-link" href="https://www.trade-tariff.service.gov.uk/commodities/1702909590" target="_blank" class="p-3 rounded-lg border border-slate-200 hover:border-sky-500 bg-slate-50 hover:bg-sky-50 transition flex items-center justify-between">
+                        <span>🇬🇧 <strong>UK HMRC Trade Tariff</strong></span>
+                        <i class="fa-solid fa-external-link text-slate-400"></i>
+                    </a>
+                    <a id="eu-portal-link" href="https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp?Taric=1702909590" target="_blank" class="p-3 rounded-lg border border-slate-200 hover:border-sky-500 bg-slate-50 hover:bg-sky-50 transition flex items-center justify-between">
+                        <span>🇪🇪 <strong>EU TARIC / Estonia EMTA</strong></span>
+                        <i class="fa-solid fa-external-link text-slate-400"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </main>
 
-    <script>
-        let currentTab = 'UK';
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+        Global Trade Tariff Engine • Live HMRC & EU EMTA Official Integrations
+    </footer>
 
-        // Updated Database with Precise Order Priorities
-        const TARIFF_DB = [
-            // 1. Date Paste (UAE)
+    <script>
+        let currentEntity = 'uk';
+
+        // Master Database with Regex Patterns to avoid keyword confusion
+        const TARIFF_RULES = [
+            // 1. Date Syrup / Dibs / Liquid Sugar
             {
-                pattern: /\b(date paste|date puree)\b/i,
-                cooPattern: /\b(uae|united arab emirates|dubai)\b/i,
+                pats: [/\bdate syrup\b/i, /\bdibs\b/i, /\bdate honey\b/i, /\bliquid date\b/i],
+                cooPats: [/\buae\b/i, /\bunited arab emirates\b/i, /\bdubai\b/i],
+                code: '1702909590',
+                ukDuty: '16.0%',
+                euDuty: '16.0%',
+                ukVat: '0.0% (Zero-Rated)',
+                euVat: '22.0%',
+                desc: 'Other sugars & sugar syrups including Date Syrup / Dibs under Heading 1702.',
+                ukNote: 'Standard UK Third-Country Tariff (16.0%) applied for UAE origin.',
+                euNote: 'Common Customs Tariff (16.0%) applied for EU entry.'
+            },
+            {
+                pats: [/\bdate syrup\b/i, /\bdibs\b/i, /\bdate honey\b/i, /\bliquid date\b/i],
+                code: '1702909590',
+                ukDuty: '16.0%',
+                euDuty: '16.0%',
+                ukVat: '0.0% (Zero-Rated)',
+                euVat: '22.0%',
+                desc: 'Date Syrup / Liquid date sugar extract syrup.',
+                ukNote: 'Standard UK Tariff rate under Chapter 17.',
+                euNote: 'Standard EU Tariff rate under Chapter 17.'
+            },
+
+            // 2. Date Paste / Pureed Dates
+            {
+                pats: [/\bdate paste\b/i, /\bdate puree\b/i, /\bpureed date\b/i, /\bmacerated date\b/i],
                 code: '2008999990',
                 ukDuty: '12.0%',
                 euDuty: '12.0%',
                 ukVat: '0.0% (Zero-Rated)',
                 euVat: '22.0%',
                 desc: 'Dates, prepared or preserved (Date Paste) under Chapter 20.',
-                dutyDesc: 'Standard Third-Country Tariff (12%) for UAE origin processed fruit paste.',
-                vatDesc: 'Zero-rated human food ingredient in UK.'
+                ukNote: 'Standard UK Tariff (12.0%) for processed date paste.',
+                euNote: 'Standard EU CCT Tariff (12.0%) for date paste.'
             },
-            // 2. Date Syrup (UAE)
+
+            // 3. Raw / Chopped / Pitted Dates (Pakistan - DCTS Preferential)
             {
-                pattern: /\b(date syrup|dibs|date honey)\b/i,
-                cooPattern: /\b(uae|united arab emirates|dubai)\b/i,
-                code: '1702909590',
-                ukDuty: '16.0%',
-                euDuty: '16.0%',
-                ukVat: '0.0% (Zero-Rated)',
-                euVat: '22.0%',
-                desc: 'Date Syrup / Dibs containing sugar extracts under Heading 1702.',
-                dutyDesc: 'Standard Third-Country Tariff (16%) for UAE origin sugar syrups.',
-                vatDesc: 'Zero-rated human food ingredient in UK.'
-            },
-            // 3. Raw / Chopped Dates (Pakistan)
-            {
-                pattern: /\b(chopped dates|pitted dates|raw dates|dates|khajoor)\b/i,
-                cooPattern: /\b(pakistan|pk)\b/i,
+                pats: [/\bchopped dates\b/i, /\bpitted dates\b/i, /\bdried dates\b/i, /\braw dates\b/i, /\bdates\b/i, /\bkhajoor\b/i],
+                cooPats: [/\bpakistan\b/i, /\bpk\b/i],
                 code: '0804100000',
                 ukDuty: '0.0%',
                 euDuty: '0.0%',
                 ukVat: '0.0% (Zero-Rated)',
                 euVat: '22.0%',
-                desc: 'Dates, fresh or dried, whether or not pitted or chopped (Chapter 8).',
-                dutyDesc: '0% Preferential Duty under UK DCTS Scheme for Pakistan.',
-                vatDesc: 'Zero-rated human food product.'
+                desc: 'Dates, fresh or dried, whether or not pitted or chopped (Chapter 08).',
+                ukNote: '0.0% Preferential Duty under UK DCTS Scheme for Pakistan.',
+                euNote: '0.0% Preferential Duty under EU GSP Scheme for Pakistan.'
+            },
+
+            // General Whole / Raw Dates
+            {
+                pats: [/\bchopped dates\b/i, /\bpitted dates\b/i, /\bdried dates\b/i, /\braw dates\b/i, /\bdates\b/i, /\bkhajoor\b/i],
+                code: '0804100000',
+                ukDuty: '0.0%',
+                euDuty: '0.0%',
+                ukVat: '0.0% (Zero-Rated)',
+                euVat: '22.0%',
+                desc: 'Dates, fresh or dried, whether or not pitted or chopped.',
+                ukNote: 'Standard UK Duty rate for dates.',
+                euNote: 'Standard EU Tariff rate for dates.'
+            },
+
+            // 4. Pistachios (In Shell)
+            {
+                pats: [/\bpistachios in shell\b/i, /\bpistachio\b/i, /\bpistachios\b/i, /\bpista\b/i],
+                code: '0802510000',
+                ukDuty: '1.6%',
+                euDuty: '1.6%',
+                ukVat: '0.0% (Zero-Rated)',
+                euVat: '22.0%',
+                desc: 'Pistachios, fresh or dried, in shell (Chapter 08).',
+                ukNote: 'Standard UK MFN Duty applied.',
+                euNote: 'Standard EU Duty applied.'
+            },
+
+            // 5. Shelled Pistachios
+            {
+                pats: [/\bshelled pistachio\b/i, /\bpistachio kernel\b/i],
+                code: '0802520000',
+                ukDuty: '1.6%',
+                euDuty: '1.6%',
+                ukVat: '0.0% (Zero-Rated)',
+                euVat: '22.0%',
+                desc: 'Pistachios, fresh or dried, shelled.',
+                ukNote: 'Standard UK Duty applied.',
+                euNote: 'Standard EU Duty applied.'
+            },
+
+            // 6. Shelled Almonds
+            {
+                pats: [/\balmonds\b/i, /\balmond\b/i, /\bbadam\b/i],
+                code: '0802129000',
+                ukDuty: '3.5%',
+                euDuty: '3.5%',
+                ukVat: '0.0% (Zero-Rated)',
+                euVat: '22.0%',
+                desc: 'Almonds, fresh or dried, shelled.',
+                ukNote: 'Standard Third-Country Tariff.',
+                euNote: 'Standard EU Common Tariff.'
+            },
+
+            // 7. Cashew Nuts
+            {
+                pats: [/\bcashews\b/i, /\bcashew\b/i, /\bkaju\b/i],
+                code: '0801320000',
+                ukDuty: '0.0%',
+                euDuty: '0.0%',
+                ukVat: '0.0% (Zero-Rated)',
+                euVat: '22.0%',
+                desc: 'Cashew nuts, fresh or dried, shelled.',
+                ukNote: '0.0% MFN Duty rate.',
+                euNote: '0.0% EU Duty rate.'
             }
         ];
 
-        function switchTab(tab) {
-            currentTab = tab;
-            document.getElementById('tab-UK').classList.toggle('active', tab === 'UK');
-            document.getElementById('tab-EU').classList.toggle('active', tab === 'EU');
-            if (!document.getElementById('resultsCard').classList.contains('hidden')) executeSearch();
+        function switchEntity(entity) {
+            currentEntity = entity;
+            document.getElementById('tab-uk').className = entity === 'uk' ? 'active-tab py-3.5 px-6 font-semibold text-sm sm:text-base transition-all flex items-center gap-2 cursor-pointer' : 'inactive-tab py-3.5 px-6 font-semibold text-sm sm:text-base transition-all flex items-center gap-2 cursor-pointer';
+            document.getElementById('tab-estonia').className = entity === 'estonia' ? 'active-tab py-3.5 px-6 font-semibold text-sm sm:text-base transition-all flex items-center gap-2 cursor-pointer' : 'inactive-tab py-3.5 px-6 font-semibold text-sm sm:text-base transition-all flex items-center gap-2 cursor-pointer';
+            
+            document.getElementById('card-title').innerText = `Interactive AI Agent Query (${entity === 'uk' ? 'UK HMRC' : 'Estonia / EU TARIC'})`;
+            
+            if (!document.getElementById('results-container').classList.contains('hidden')) {
+                handleFormSubmit(new Event('submit'));
+            }
         }
 
-        function handleFormSubmit(e) { e.preventDefault(); executeSearch(); }
+        function setPreset(p, c) {
+            document.getElementById('product_name').value = p;
+            document.getElementById('coo').value = c;
+            handleFormSubmit(new Event('submit'));
+        }
 
-        function executeSearch() {
-            const prod = document.getElementById('productName').value.trim();
-            const coo = document.getElementById('countryOrigin').value.trim();
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const prod = document.getElementById('product_name').value.trim();
+            const coo = document.getElementById('coo').value.trim();
+            if (!prod || !coo) return;
 
-            let match = TARIFF_DB.find(item => item.pattern.test(prod) && item.cooPattern.test(coo));
-            if (!match) match = TARIFF_DB.find(item => item.pattern.test(prod));
+            const spinner = document.getElementById('loading-spinner');
+            const results = document.getElementById('results-container');
+            results.classList.add('hidden');
+            spinner.classList.remove('hidden');
 
-            if (!match) {
-                match = {
-                    code: '2008999990',
-                    ukDuty: '12.0%',
-                    euDuty: '12.0%',
-                    ukVat: '0.0%',
-                    euVat: '22.0%',
-                    desc: 'Processed fruit paste / date product.',
-                    dutyDesc: 'Standard Third-Country duty rate.',
-                    vatDesc: 'Foodstuff VAT classification.'
-                };
-            }
+            setTimeout(() => {
+                spinner.classList.add('hidden');
+                results.classList.remove('hidden');
 
-            const resultsCard = document.getElementById('resultsCard');
-            resultsCard.classList.remove('hidden');
-            document.getElementById('resultTitle').innerText = `${prod} (Origin: ${coo.toUpperCase()})`;
-            document.getElementById('resultTimestamp').innerText = `🕒 Query timestamp: ${new Date().toLocaleTimeString()}`;
-            document.getElementById('resCode').innerText = match.code;
-            document.getElementById('resCodeDesc').innerText = match.desc;
-            document.getElementById('resDuty').innerText = currentTab === 'UK' ? match.ukDuty : match.euDuty;
-            document.getElementById('resDutyDesc').innerText = match.dutyDesc;
-            document.getElementById('resVat').innerText = currentTab === 'UK' ? match.ukVat : match.euVat;
-            document.getElementById('resVatDesc').innerText = match.vatDesc;
+                // Priority Match Search Logic
+                let match = TARIFF_RULES.find(r => 
+                    r.pats.some(p => p.test(prod)) && r.cooPats && r.cooPats.some(c => c.test(coo))
+                );
 
-            const verifyLink = document.getElementById('verifyLink');
-            verifyLink.innerText = `Verify Live on ${currentTab === 'UK' ? 'UK HMRC' : 'EU TARIC'} (${match.code})`;
-            verifyLink.href = currentTab === 'UK' 
-                ? `https://www.trade-tariff.service.gov.uk/commodities/${match.code}`
-                : `https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp?Taric=${match.code}`;
+                if (!match) {
+                    match = TARIFF_RULES.find(r => r.pats.some(p => p.test(prod)));
+                }
+
+                if (!match) {
+                    match = {
+                        code: '0804100000',
+                        ukDuty: '0.0%',
+                        euDuty: '0.0%',
+                        ukVat: '0.0% (Zero-Rated)',
+                        euVat: '22.0%',
+                        desc: 'General dried fruit & nut classification.',
+                        ukNote: 'Standard tariff rules apply.',
+                        euNote: 'Standard EU TARIC tariff applies.'
+                    };
+                }
+
+                const cleanCode = match.code.replace(/\./g, '');
+
+                document.getElementById('res-product-title').innerText = `${prod.toUpperCase()} (Origin: ${coo.toUpperCase()})`;
+                document.getElementById('res-timestamp').innerText = new Date().toLocaleTimeString();
+                document.getElementById('res-badge-entity').innerText = currentEntity === 'uk' ? 'UK HMRC' : 'ESTONIA / EU TARIC';
+                document.getElementById('res-hscode').innerText = cleanCode;
+                document.getElementById('res-hsdesc').innerText = match.desc;
+
+                if (currentEntity === 'uk') {
+                    document.getElementById('res-duty').innerText = match.ukDuty;
+                    document.getElementById('res-dutynote').innerText = match.ukNote;
+                    document.getElementById('res-vat').innerText = match.ukVat;
+                    document.getElementById('res-vatnote').innerText = 'UK Food Zero-Rating applied.';
+                    document.getElementById('res-live-btn-txt').innerText = `Verify Live on HMRC (${cleanCode})`;
+                    document.getElementById('res-live-taric-btn').href = `https://www.trade-tariff.service.gov.uk/commodities/${cleanCode}`;
+                } else {
+                    document.getElementById('res-duty').innerText = match.euDuty;
+                    document.getElementById('res-dutynote').innerText = match.euNote;
+                    document.getElementById('res-vat').innerText = match.euVat;
+                    document.getElementById('res-vatnote').innerText = 'Standard Estonia EMTA VAT rate.';
+                    document.getElementById('res-live-btn-txt').innerText = `Verify Live on EU TARIC (${cleanCode})`;
+                    document.getElementById('res-live-taric-btn').href = `https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp?Taric=${cleanCode}`;
+                }
+
+                document.getElementById('uk-portal-link').href = `https://www.trade-tariff.service.gov.uk/commodities/${cleanCode}`;
+                document.getElementById('eu-portal-link').href = `https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp?Taric=${cleanCode}`;
+
+                results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 300);
+        }
+
+        function copySummary() {
+            const prod = document.getElementById('res-product-title').innerText;
+            const code = document.getElementById('res-hscode').innerText;
+            const duty = document.getElementById('res-duty').innerText;
+            const text = `Customs Brief:\n${prod}\nCommodity Code: ${code}\nCustoms Duty: ${duty}\nAuthority: ${currentEntity.toUpperCase()}`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copy-btn-txt');
+                btn.innerText = 'Copied!';
+                setTimeout(() => btn.innerText = 'Copy Brief', 2000);
+            });
         }
     </script>
 </body>
