@@ -21,9 +21,6 @@
             color: #64748b;
             font-weight: 600;
         }
-        .code-pill {
-            letter-spacing: 0.05em;
-        }
     </style>
 </head>
 <body class="min-h-screen text-slate-800 flex flex-col">
@@ -86,6 +83,7 @@
                                 <button type="button" onclick="setQuickSample('date syrup', 'UAE')" class="bg-white border border-slate-200 hover:border-slate-300 px-2.5 py-1 rounded-lg hover:bg-slate-100 transition shadow-xs">🌴 Date Syrup (UAE)</button>
                                 <button type="button" onclick="setQuickSample('chopped dates', 'Pakistan')" class="bg-white border border-slate-200 hover:border-slate-300 px-2.5 py-1 rounded-lg hover:bg-slate-100 transition shadow-xs">🌴 Chopped Dates (PK)</button>
                                 <button type="button" onclick="setQuickSample('pistachios', 'USA')" class="bg-white border border-slate-200 hover:border-slate-300 px-2.5 py-1 rounded-lg hover:bg-slate-100 transition shadow-xs">🥜 Pistachios (USA)</button>
+                                <button type="button" onclick="setQuickSample('almonds', 'USA')" class="bg-white border border-slate-200 hover:border-slate-300 px-2.5 py-1 rounded-lg hover:bg-slate-100 transition shadow-xs">🌰 Almonds (USA)</button>
                             </div>
                         </div>
 
@@ -106,7 +104,7 @@
                 <div>
                     <div class="flex items-center space-x-3 mb-1">
                         <span id="badgeEntity" class="bg-sky-500 text-white font-bold text-xs px-2.5 py-1 rounded-md uppercase tracking-wider">UK HMRC</span>
-                        <span id="badgeRateType" class="bg-emerald-500 text-white font-bold text-xs px-2.5 py-1 rounded-md uppercase tracking-wider">PREFERENTIAL RATE</span>
+                        <span id="badgeRateType" class="bg-emerald-500 text-white font-bold text-xs px-2.5 py-1 rounded-md uppercase tracking-wider">VERIFIED COMMODITY</span>
                     </div>
                     <h2 id="resultTitle" class="text-2xl font-bold tracking-tight"></h2>
                     <p id="resultTimestamp" class="text-xs text-slate-400 mt-1 font-mono"></p>
@@ -128,7 +126,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Commodity Code -->
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">RECOMMENDED COMMODITY CODE</div>
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">COMMODITY / HS CODE</div>
                     <div id="resCode" class="text-3xl font-extrabold text-indigo-700 font-mono tracking-tight mb-2"></div>
                     <p id="resCodeDesc" class="text-xs text-slate-500 leading-relaxed"></p>
                 </div>
@@ -155,6 +153,7 @@
 
         // Verified Tariff Database (Codes formatted strictly without dots)
         const TARIFF_DB = [
+            // 1. Date Syrup (UAE Origin) -> HS 1702909590 with 16.0% Duty
             {
                 keywords: ['date syrup', 'dibs', 'date honey', 'liquid date'],
                 cooMatches: ['uae', 'united arab emirates', 'dubai'],
@@ -163,10 +162,11 @@
                 euDuty: '16.0%',
                 ukVat: '0.0% (Zero-Rated)',
                 euVat: '22.0% (Standard)',
-                desc: 'Date syrup / Liquid date extracts containing added natural sugars under Tariff heading 1702.',
-                dutyDesc: 'Standard UK Third-Country Duty Rate of 16.0% applies to UAE origin imports.',
+                desc: 'Other sugars & sugar syrups including Date Syrup / Dibs under Heading 1702.',
+                dutyDesc: 'Standard UK/EU Third-Country Duty Rate of 16.0% applies to UAE origin imports.',
                 vatDesc: 'UK zero-rating applies to food ingredients for human consumption.'
             },
+            // General Date Syrup
             {
                 keywords: ['date syrup', 'dibs', 'date honey'],
                 code: '1702909590',
@@ -174,12 +174,13 @@
                 euDuty: '16.0%',
                 ukVat: '0.0% (Zero-Rated)',
                 euVat: '22.0% (Standard)',
-                desc: 'Other sugars & sugar syrups including Date Syrup / Dibs.',
-                dutyDesc: 'Standard Third-Country Tariff applied upon entry.',
-                vatDesc: 'Foodstuff VAT classification applies.'
+                desc: 'Date Syrup / Liquid date extract syrups.',
+                dutyDesc: '16.0% Duty applied under Heading 1702.',
+                vatDesc: 'Foodstuff VAT zero-rating applies in the UK.'
             },
+            // 2. Raw / Whole / Chopped / Pitted Dates -> HS 0804100000
             {
-                keywords: ['chopped dates', 'pitted dates', 'dates', 'khajoor', 'date paste'],
+                keywords: ['chopped dates', 'pitted dates', 'dates', 'khajoor', 'raw dates'],
                 cooMatches: ['pakistan', 'pk'],
                 code: '0804100000',
                 ukDuty: '0.0%',
@@ -188,8 +189,20 @@
                 euVat: '22.0% (Standard)',
                 desc: 'Dates, fresh or dried, whether or not pitted or chopped.',
                 dutyDesc: '0% Preferential Duty under UK DCTS / GSP Scheme for Pakistan.',
-                vatDesc: 'Zero-rated food product.'
+                vatDesc: 'Zero-rated human food product.'
             },
+            {
+                keywords: ['chopped dates', 'pitted dates', 'dates', 'khajoor'],
+                code: '0804100000',
+                ukDuty: '0.0%',
+                euDuty: '0.0%',
+                ukVat: '0.0% (Zero-Rated)',
+                euVat: '22.0% (Standard)',
+                desc: 'Dates, fresh or dried, whether or not pitted or chopped.',
+                dutyDesc: 'Standard Third-Country Tariff applied upon entry.',
+                vatDesc: 'Zero-rated human food product.'
+            },
+            // 3. Pistachios (In shell) -> HS 0802510000
             {
                 keywords: ['pistachios', 'pistachio', 'pista'],
                 code: '0802510000',
@@ -200,6 +213,30 @@
                 desc: 'Pistachios, fresh or dried, in shell.',
                 dutyDesc: 'Standard MFN duty rate applied.',
                 vatDesc: 'Human food product zero-rating applies.'
+            },
+            // 4. Shelled Almonds -> HS 0802129000
+            {
+                keywords: ['almonds', 'almond', 'badam'],
+                code: '0802129000',
+                ukDuty: '3.5%',
+                euDuty: '3.5%',
+                ukVat: '0.0% (Zero-Rated)',
+                euVat: '22.0% (Standard)',
+                desc: 'Almonds, fresh or dried, shelled (other than sweet almonds).',
+                dutyDesc: 'Standard MFN import tariff.',
+                vatDesc: 'Zero-rated food category.'
+            },
+            // 5. Cashews -> HS 0801320000
+            {
+                keywords: ['cashews', 'cashew', 'kaju'],
+                code: '0801320000',
+                ukDuty: '0.0%',
+                euDuty: '0.0%',
+                ukVat: '0.0% (Zero-Rated)',
+                euVat: '22.0% (Standard)',
+                desc: 'Cashew nuts, fresh or dried, shelled.',
+                dutyDesc: '0% Duty applied.',
+                vatDesc: 'Zero-rated foodstuff.'
             }
         ];
 
@@ -219,7 +256,6 @@
                 btn.innerText = '🤖 Ask EU AI Compliance Agent';
             }
 
-            // Re-run search if results are visible
             if (!document.getElementById('resultsCard').classList.contains('hidden')) {
                 executeSearch();
             }
@@ -242,7 +278,7 @@
 
             if (!productInput || !countryInput) return;
 
-            // Database Search Algorithm
+            // Strict Priority Search
             let match = TARIFF_DB.find(item => {
                 const matchesKeyword = item.keywords.some(k => productInput.includes(k));
                 if (!matchesKeyword) return false;
@@ -252,12 +288,11 @@
                 return true;
             });
 
-            // Fallback match if specific COO rule didn't trigger
             if (!match) {
                 match = TARIFF_DB.find(item => item.keywords.some(k => productInput.includes(k)));
             }
 
-            // Default fallback
+            // Fallback rule if product not in quick database
             if (!match) {
                 match = {
                     code: '0804100000',
@@ -282,7 +317,7 @@
             document.getElementById('resultTitle').innerText = formattedTitle;
             document.getElementById('resultTimestamp').innerText = `🕒 Query timestamp: ${new Date().toLocaleTimeString()}`;
 
-            // Clean 10-digit code without any dots
+            // Clean 10-digit code without dots
             const cleanCode = data.code.replace(/\./g, '');
 
             document.getElementById('resCode').innerText = cleanCode;
@@ -308,7 +343,6 @@
                 document.getElementById('verifyLink').href = `https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp?Taric=${cleanCode}`;
             }
 
-            // Scroll smoothly to results
             resultsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
